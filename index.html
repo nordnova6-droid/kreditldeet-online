@@ -1,14 +1,48 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8" />
   <title>Secret Game</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body style="background:black; color:white; text-align:center; font-family:sans-serif;">
-  <h1>Secret Game</h1>
-  <form>
-    <input type="text" placeholder="Adınızı yazın"><br><br>
-    <textarea placeholder="Mesajınızı yazın"></textarea><br><br>
-    <button type="submit">Göndər</button>
-  </form>
+<body>
+
+<h2>Anonim Mesaj Göndər</h2>
+
+<input type="text" id="name" placeholder="Adınızı yazın"><br><br>
+<textarea id="message" placeholder="Mesajınızı yazın"></textarea><br><br>
+<button onclick="sendMessage()">Göndər</button>
+
+<p id="status"></p>
+
+<script>
+  const supabaseUrl = "https://hlbjftibzknwwkgeqslo.supabase.co";
+  const supabaseKey = "sb_publishable_rMqJCbgg3z9WPy-Rs5GVMQ_mW2asqnA";
+
+  const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+  async function sendMessage() {
+    const name = document.getElementById("name").value;
+    const message = document.getElementById("message").value;
+
+    if (!name || !message) {
+      document.getElementById("status").innerText = "Bütün xanaları doldurun!";
+      return;
+    }
+
+    const { error } = await supabase
+      .from("messages")
+      .insert([{ name: name, message: message }]);
+
+    if (error) {
+      document.getElementById("status").innerText = "Xəta baş verdi!";
+    } else {
+      document.getElementById("status").innerText = "Mesaj göndərildi!";
+      document.getElementById("name").value = "";
+      document.getElementById("message").value = "";
+    }
+  }
+</script>
+
 </body>
 </html>
