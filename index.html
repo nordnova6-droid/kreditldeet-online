@@ -38,7 +38,10 @@
       .insert([{ name: name, message: message }]);
 
     if (error) {
-      document.getElementById("status").innerText = "Xəta baş verdi!";
+  document.getElementById("status").innerText = error.message;
+  console.log(error);
+}
+
     } else {
       document.getElementById("status").innerText = "Mesaj göndərildi!";
       document.getElementById("name").value = "";
