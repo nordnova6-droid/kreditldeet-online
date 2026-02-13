@@ -31,7 +31,7 @@
     }
 
     const { error } = await supabase
-      .from("messages")
+      .from("messajlar")
       .insert([{ name: name, message: message }]);
 
     if (error) {
