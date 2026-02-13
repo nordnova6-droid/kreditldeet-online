@@ -13,7 +13,9 @@
 <textarea id="message" placeholder="Mesajınızı yazın"></textarea><br><br>
 <button onclick="sendMessage()">Göndər</button>
 
-<p id="status"></p>
+<p id="status"></p> 
+<h3>Gələn Mesajlar:</h3>
+<div id="messagesList"></div>
 
 <script>
   const supabaseUrl = "https://hlbjftibzknwwkgeqslo.supabase.co";
@@ -31,7 +33,7 @@
     }
 
     const { error } = await supabase
-      .from("messajlar")
+      .from("messages")
       .insert([{ name: name, message: message }]);
 
     if (error) {
@@ -40,9 +42,28 @@
       document.getElementById("status").innerText = "Mesaj göndərildi!";
       document.getElementById("name").value = "";
       document.getElementById("message").value = "";
+      loadMessages();
     }
   }
+
+  async function loadMessages() {
+    const { data, error } = await supabase
+      .from("messages")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (!error) {
+      const list = document.getElementById("messagesList");
+      list.innerHTML = "";
+      data.forEach(msg => {
+        list.innerHTML += `<p><b>${msg.name}:</b> ${msg.message}</p>`;
+      });
+    }
+  }
+
+  loadMessages();
 </script>
+
 
 </body>
 </html>
