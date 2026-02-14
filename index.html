@@ -1,28 +1,51 @@
-<script>
-  const supabaseUrl = "https://hlbjftibzknwwkgeqslo.supabase.co";
-  const supabaseKey = "SENIN_JWT_ACARIN_BURDA"; eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhsYmpmdGliemtud3drZ2Vxc2xvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5MTU3ODgsImV4cCI6MjA4NjQ5MTc4OH0.fph2EMAZHzuBR71vitA-Tx7sGuAc9w-3vU9nWYBiOaM
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Anonim Oyun</title>
+</head>
+<body>
 
+<h2>Anonim Mesaj Göndər</h2>
+
+<input type="text" id="name" placeholder="Adınızı yazın"><br><br>
+<textarea id="message" placeholder="Mesajınızı yazın"></textarea><br><br>
+<button id="sendBtn">Göndər</button>
+
+<p id="status"></p>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  const supabaseUrl = "https://gkrfcoyleewxrxbfdunq.supabase.co";
+  const supabaseKey = "sb_publishable_E1QDjV9fAt2IaoI3h7G9Iw_hIiSaAFH";
 
   const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-  async function sendMessage() {
+  document.getElementById("sendBtn").addEventListener("click", async () => {
+
     const name = document.getElementById("name").value;
     const message = document.getElementById("message").value;
 
-    console.log("Göndərilir:", name, message);
-
-    const { data, error } = await supabase
-      .from("messages")
-      .insert([{ name: name, message: message }])
-      .select();
-
-    console.log("Nəticə:", data, error);
-
-    if (error) {
-      document.getElementById("status").innerText = "ERROR: " + error.message;
+    if (!name || !message) {
+      document.getElementById("status").innerText = "Bütün xanaları doldurun!";
       return;
     }
 
-    document.getElementById("status").innerText = "Mesaj göndərildi!";
-  }
+    const { error } = await supabase
+      .from("messages")
+      .insert([{ name: name, message: message }]);
+
+    if (error) {
+      document.getElementById("status").innerText = "Xəta: " + error.message;
+    } else {
+      document.getElementById("status").innerText = "Mesaj göndərildi!";
+      document.getElementById("name").value = "";
+      document.getElementById("message").value = "";
+    }
+
+  });
 </script>
+
+</body>
+</html>
